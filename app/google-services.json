@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "567759610164",
+    "project_id": "new-paprola-marketing-fsm",
+    "storage_bucket": "new-paprola-marketing-fsm.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:567759610164:android:f1a76f1b808fdff6f3c561",
+        "android_client_info": {
+          "package_name": "com.paprolafsm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "567759610164-lsvhv2i39eae4j8cc7gsnb9t9d983soh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCvkE84DKOAs57tPu4-o52TDzg3w01YuCo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "567759610164-lsvhv2i39eae4j8cc7gsnb9t9d983soh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
