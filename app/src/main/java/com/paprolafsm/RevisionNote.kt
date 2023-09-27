@@ -95,4 +95,6 @@ class RevisionNote {
 
     // 21.0 LoginActivity v 4.1.6 Suman 13/07/2023 mantis 26555 Usersettings
 
+    // mantis id 26741 Storage permission updation Suman 22-08-2023
+
 }

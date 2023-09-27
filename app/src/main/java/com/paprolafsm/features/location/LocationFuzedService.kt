@@ -663,6 +663,7 @@ class LocationFuzedService : Service(), GoogleApiClient.ConnectionCallbacks, Goo
         //return
 
         try {
+            println("service_tag ${Pref.current_latitude.toString()} long - ${Pref.current_longitude.toString()}")
             if (location != null) {
                 // 8.0 LocationFuzedService AppV 4.0.7 Suman   18/03/2023 Location lat-long updation
                 AppUtils.mLocation = location

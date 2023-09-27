@@ -93,6 +93,7 @@ import com.paprolafsm.features.nearbyshops.model.*
 import com.paprolafsm.features.photoReg.PhotoRegAadhaarFragment
 import com.paprolafsm.features.shopdetail.presentation.api.EditShopRepoProvider
 import com.paprolafsm.features.viewAllOrder.interf.QaOnCLick
+import com.paprolafsm.features.viewAllOrder.orderOptimized.CustomProductRate
 import com.paprolafsm.widgets.AppCustomEditText
 import com.paprolafsm.widgets.AppCustomTextView
 
@@ -472,8 +473,11 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
                 (mContext as DashboardActivity).showSnackMessage("Location is not valid")
             }
         }
+        fetchCUrrentLoc()
+        Handler().postDelayed(Runnable {
+            normalGetLocFlow()
+        }, 600)
 
-        normalGetLocFlow()
 
         /*if (mLongitude == "" && mLatitude == "") {
             if (dialog == null) {
@@ -490,7 +494,32 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
         return view
     }
 
+    fun fetchCUrrentLoc(){
+        try {
+            SingleShotLocationProvider.requestSingleUpdate(mContext,
+                object : SingleShotLocationProvider.LocationCallback {
+                    override fun onStatusChanged(status: String) {
+                    }
+
+                    override fun onProviderEnabled(status: String) {
+                    }
+
+                    override fun onProviderDisabled(status: String) {
+                    }
+
+                    override fun onNewLocationAvailable(location: Location) {
+                        mLatitude = location.latitude.toString()
+                        mLongitude = location.longitude.toString()
+                        println("add_shop_loc single tone $mLatitude $mLongitude")
+                    }
+                })
+        }catch (ex:Exception){
+            ex.printStackTrace()
+        }
+    }
+
     private fun normalGetLocFlow() {
+        println("add_shop_loc normalGetLocFlow $mLatitude $mLongitude")
         if (mLongitude == "" && mLatitude == "") {
             //getShopLatLong()
             /*if (dialog == null) {
@@ -5553,6 +5582,20 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
 
     private var permissionUtils: PermissionUtils? = null
     private fun initPermissionCheck() {
+
+        //begin mantis id 26741 Storage permission updation Suman 22-08-2023
+        var permissionList = arrayOf<String>( Manifest.permission.CAMERA)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissionList += Manifest.permission.READ_MEDIA_IMAGES
+            permissionList += Manifest.permission.READ_MEDIA_AUDIO
+            permissionList += Manifest.permission.READ_MEDIA_VIDEO
+        }else{
+            permissionList += Manifest.permission.WRITE_EXTERNAL_STORAGE
+            permissionList += Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+//end mantis id 26741 Storage permission updation Suman 22-08-2023
+
         permissionUtils = PermissionUtils(mContext as Activity, object : PermissionUtils.OnPermissionListener {
             override fun onPermissionGranted() {
                 if (isDocDegree == 1)
@@ -5564,11 +5607,25 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
             override fun onPermissionNotGranted() {
                 (mContext as DashboardActivity).showSnackMessage(getString(R.string.accept_permission))
             }
+            // mantis id 26741 Storage permission updation Suman 22-08-2023
+        },permissionList)// arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
 
-        }, arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
 
     private fun initPermissionCheckOne() {
+        //begin mantis id 26741 Storage permission updation Suman 22-08-2023
+        var permissionList = arrayOf<String>( Manifest.permission.CAMERA)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissionList += Manifest.permission.READ_MEDIA_IMAGES
+            permissionList += Manifest.permission.READ_MEDIA_AUDIO
+            permissionList += Manifest.permission.READ_MEDIA_VIDEO
+        }else{
+            permissionList += Manifest.permission.WRITE_EXTERNAL_STORAGE
+            permissionList += Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+//end mantis id 26741 Storage permission updation Suman 22-08-2023
+
         permissionUtils = PermissionUtils(mContext as Activity, object : PermissionUtils.OnPermissionListener {
             override fun onPermissionGranted() {
                 showPictureDialog()
@@ -5577,8 +5634,8 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
             override fun onPermissionNotGranted() {
                 (mContext as DashboardActivity).showSnackMessage(getString(R.string.accept_permission))
             }
-
-        }, arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+// mantis id 26741 Storage permission updation Suman 22-08-2023
+        },permissionList)// arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
 
     fun onRequestPermission(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -5846,6 +5903,8 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
             (mContext as DashboardActivity).startActivityForResult(intent, PermissionHelper.REQUEST_CODE_CAMERA)*/
 
 
+        }else{
+            var permission = false
         }
     }
 
@@ -6022,7 +6081,7 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
 
 //        shopDataModel = AddShopDBModelEntity()
         if (!(shopName.text!!.isBlank()))
-            shopDataModel.shopName = shopName.text.toString()
+            shopDataModel.shopName = shopName.text.toString().trim()
         else {
             shopName.error = getString(R.string.field_cannot_be_blank)
             /*9-12-2021*/
@@ -6122,7 +6181,8 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
 
         if (AppUtils.isValidateMobile(ownerNumber.text.toString())) {
             shopDataModel.ownerContactNumber = ownerNumber.text.toString()
-        } else {
+        }
+        else {
             (mContext as DashboardActivity).showSnackMessage(getString(R.string.numbervalid_error))
             BaseActivity.isApiInitiated = false
             return
@@ -6200,167 +6260,182 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
         shopDataModel.alternateNoForCustomer = alternate_number_EDT.text.toString().trim()
         shopDataModel.whatsappNoForCustomer = whatsapp_number_EDT.text.toString().trim()
 
-
-        shopDataModel.doc_degree = ""
-        if (ll_doc_extra_info.visibility == View.VISIBLE) {
-            if (TextUtils.isEmpty(attachment_EDT.text.toString().trim())) {
+        if(checkNearbyDuplicacy(shopLat,shopLong)){
+            val simpleDialog = Dialog(mContext)
+            simpleDialog.setCancelable(false)
+            simpleDialog.getWindow()!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            simpleDialog.setContentView(R.layout.dialog_ok)
+            val dialogHeader = simpleDialog.findViewById(R.id.dialog_yes_header_TV) as AppCustomTextView
+            dialogHeader.text = "You are creating a ${Pref.shopText} with Duplicate Name under same ${Pref.ddText} and in the same location. Please make unique ${Pref.shopText}."
+            val dialogYes = simpleDialog.findViewById(R.id.tv_dialog_yes) as AppCustomTextView
+            dialogYes.setOnClickListener({ view ->
+                simpleDialog.cancel()
                 BaseActivity.isApiInitiated = false
-                attachment_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_capture_doc_pic))
-                return
-            } else
-                shopDataModel.doc_degree = degreeImgLink
+            })
+            simpleDialog.show()
+        }else{
+            shopDataModel.doc_degree = ""
+            if (ll_doc_extra_info.visibility == View.VISIBLE) {
+                if (TextUtils.isEmpty(attachment_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    attachment_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_capture_doc_pic))
+                    return
+                } else
+                    shopDataModel.doc_degree = degreeImgLink
 
-            if (TextUtils.isEmpty(et_specalization.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                et_specalization.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_speciallization))
-                return
-            } else
-                shopDataModel.specialization = et_specalization.text.toString().trim()
+                if (TextUtils.isEmpty(et_specalization.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    et_specalization.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_speciallization))
+                    return
+                } else
+                    shopDataModel.specialization = et_specalization.text.toString().trim()
 
-            if (TextUtils.isEmpty(et_patient_count.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                et_patient_count.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_patient_count))
-                return
-            } else
-                shopDataModel.patient_count = et_patient_count.text.toString().trim()
+                if (TextUtils.isEmpty(et_patient_count.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    et_patient_count.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_patient_count))
+                    return
+                } else
+                    shopDataModel.patient_count = et_patient_count.text.toString().trim()
 
-            if (TextUtils.isEmpty(et_category.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                et_category.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_cateogory))
-                return
-            } else
-                shopDataModel.category = et_category.text.toString().trim()
-
-
-            if (TextUtils.isEmpty(doc_family_mem_dob_EDT.text.toString())) {
-                doc_family_mem_dob_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_family_member_dob))
-                BaseActivity.isApiInitiated = false
-                return
-            }
-
-            if (TextUtils.isEmpty(doc_address_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                doc_address_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_location))
-                return
-            } else
-                shopDataModel.doc_address = doc_address_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(doc_pin_code_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                doc_pin_code_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_pincode))
-                return
-            } else
-                shopDataModel.doc_pincode = doc_pin_code_EDT.text.toString().trim()
-
-            if (!iv_yes.isSelected && !iv_no.isSelected) {
-                BaseActivity.isApiInitiated = false
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_select_chamber))
-                return
-            } else if (iv_yes.isSelected)
-                shopDataModel.chamber_status = 1
-            else if (iv_no.isSelected)
-                shopDataModel.chamber_status = 0
-
-            if (et_remarks.visibility == View.VISIBLE && TextUtils.isEmpty(et_remarks.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                et_remarks.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_remarks))
-                return
-            } else if (!TextUtils.isEmpty(et_remarks.text.toString().trim()))
-                shopDataModel.remarks = et_remarks.text.toString().trim()
-
-            if (TextUtils.isEmpty(chemist_name_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                chemist_name_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_name))
-                return
-            } else
-                shopDataModel.chemist_name = chemist_name_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(chemist_address_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                chemist_address_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_address))
-                return
-            } else
-                shopDataModel.chemist_address = chemist_address_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(chemist_pin_code_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                chemist_pin_code_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_pincode))
-                return
-            } else
-                shopDataModel.chemist_pincode = chemist_pin_code_EDT.text.toString().trim()
+                if (TextUtils.isEmpty(et_category.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    et_category.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_cateogory))
+                    return
+                } else
+                    shopDataModel.category = et_category.text.toString().trim()
 
 
+                if (TextUtils.isEmpty(doc_family_mem_dob_EDT.text.toString())) {
+                    doc_family_mem_dob_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_family_member_dob))
+                    BaseActivity.isApiInitiated = false
+                    return
+                }
+
+                if (TextUtils.isEmpty(doc_address_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    doc_address_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_location))
+                    return
+                } else
+                    shopDataModel.doc_address = doc_address_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(doc_pin_code_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    doc_pin_code_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_pincode))
+                    return
+                } else
+                    shopDataModel.doc_pincode = doc_pin_code_EDT.text.toString().trim()
+
+                if (!iv_yes.isSelected && !iv_no.isSelected) {
+                    BaseActivity.isApiInitiated = false
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_select_chamber))
+                    return
+                } else if (iv_yes.isSelected)
+                    shopDataModel.chamber_status = 1
+                else if (iv_no.isSelected)
+                    shopDataModel.chamber_status = 0
+
+                if (et_remarks.visibility == View.VISIBLE && TextUtils.isEmpty(et_remarks.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    et_remarks.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_remarks))
+                    return
+                } else if (!TextUtils.isEmpty(et_remarks.text.toString().trim()))
+                    shopDataModel.remarks = et_remarks.text.toString().trim()
+
+                if (TextUtils.isEmpty(chemist_name_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    chemist_name_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_name))
+                    return
+                } else
+                    shopDataModel.chemist_name = chemist_name_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(chemist_address_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    chemist_address_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_address))
+                    return
+                } else
+                    shopDataModel.chemist_address = chemist_address_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(chemist_pin_code_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    chemist_pin_code_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_chemist_pincode))
+                    return
+                } else
+                    shopDataModel.chemist_pincode = chemist_pin_code_EDT.text.toString().trim()
 
 
 
-            saveDataToDb()
-            return
-        }
 
 
-        if (ll_extra_info.visibility == View.VISIBLE) {
-            if (TextUtils.isEmpty(director_name_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                director_name_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_director_name))
-                return
-            } else
-                shopDataModel.director_name = director_name_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(family_mem_dob_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                family_mem_dob_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_family_member_dob))
-                return
-            } else
-                shopDataModel.family_member_dob = family_mem_dob_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(key_person_name_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                key_person_name_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_person_name))
-                return
-            } else
-                shopDataModel.person_name = key_person_name_EDT.text.toString().trim()
-
-            if (TextUtils.isEmpty(key_person_no_EDT.text.toString().trim())) {
-                BaseActivity.isApiInitiated = false
-                key_person_no_EDT.error = getString(R.string.field_cannot_be_blank)
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_phn_no))
-                return
-            } else
-                shopDataModel.person_no = key_person_no_EDT.text.toString().trim()
-
-
-            if (AppUtils.isValidateMobile(key_person_no_EDT.text.toString())) {
-                shopDataModel.person_no = key_person_no_EDT.text.toString()
-            } else {
-                (mContext as DashboardActivity).showSnackMessage(getString(R.string.numbervalid_error))
-                BaseActivity.isApiInitiated = false
+                saveDataToDb()
                 return
             }
 
-            saveDataToDb()
-            return
+            if (ll_extra_info.visibility == View.VISIBLE) {
+                if (TextUtils.isEmpty(director_name_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    director_name_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_director_name))
+                    return
+                } else
+                    shopDataModel.director_name = director_name_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(family_mem_dob_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    family_mem_dob_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_family_member_dob))
+                    return
+                } else
+                    shopDataModel.family_member_dob = family_mem_dob_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(key_person_name_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    key_person_name_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_person_name))
+                    return
+                } else
+                    shopDataModel.person_name = key_person_name_EDT.text.toString().trim()
+
+                if (TextUtils.isEmpty(key_person_no_EDT.text.toString().trim())) {
+                    BaseActivity.isApiInitiated = false
+                    key_person_no_EDT.error = getString(R.string.field_cannot_be_blank)
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.error_enter_phn_no))
+                    return
+                } else
+                    shopDataModel.person_no = key_person_no_EDT.text.toString().trim()
+
+
+                if (AppUtils.isValidateMobile(key_person_no_EDT.text.toString())) {
+                    shopDataModel.person_no = key_person_no_EDT.text.toString()
+                } else {
+                    (mContext as DashboardActivity).showSnackMessage(getString(R.string.numbervalid_error))
+                    BaseActivity.isApiInitiated = false
+                    return
+                }
+
+                saveDataToDb()
+                return
+            }
+
+            if (Pref.willMoreVisitUpdateOptional)
+                showAddMoreInfoAlertDialog()
+            else {
+                saveDataToDb()
+            }
         }
 
 
-        if (Pref.willMoreVisitUpdateOptional)
-            showAddMoreInfoAlertDialog()
-        else {
-            saveDataToDb()
-        }
+
     }
 
     private fun saveDataToDb() {
@@ -8225,6 +8300,32 @@ class AddShopFragment : BaseFragment(), View.OnClickListener {
             (mContext as DashboardActivity).loadFragment(FragType.DashboardFragment,true,"")
         }
 
+    }
+
+    fun checkNearbyDuplicacy(shopLat: Double, shopLong: Double):Boolean{
+        var isNearbyDplicate = false
+        var shopN = shopName.text.toString().trim()
+        var selDDid = assignedToDDId
+        var shopType1L: ArrayList<AddShopDBModelEntity> = AppDatabase.getDBInstance()!!.addShopEntryDao().getShopsAccordingToTypeDD("1",selDDid,shopN.toLowerCase()) as ArrayList<AddShopDBModelEntity>
+        if(shopType1L.size>0){
+            for(i in 0..shopType1L.size-1){
+                var obj = shopType1L.get(i)
+                var shopLoc = Location("")
+                shopLoc.latitude = shopLat
+                shopLoc.longitude = shopLong
+                var dbShopLoc = Location("")
+                dbShopLoc.latitude = obj.shopLat.toDouble()
+                dbShopLoc.longitude = obj.shopLong.toDouble()
+                val isShopNearby = FTStorageUtils.checkShopPositionWithinRadious(shopLoc, dbShopLoc, 200)
+                if(obj.shopName.toLowerCase().equals(shopN.toLowerCase()) && isShopNearby){
+                    isNearbyDplicate = true
+                    break
+                }
+            }
+            return isNearbyDplicate
+        }else{
+            return isNearbyDplicate
+        }
     }
 
 }

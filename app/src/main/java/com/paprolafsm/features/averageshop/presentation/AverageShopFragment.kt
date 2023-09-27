@@ -1228,7 +1228,7 @@ class AverageShopFragment : BaseFragment(), DatePickerListener, View.OnClickList
 
     @SuppressLint("WrongConstant")
     private fun initAdapter() {
-        averageShopListAdapter = AverageShopListAdapter(mContext, ShopActivityEntityList, object : AverageShopListClickListener {
+        averageShopListAdapter = AverageShopListAdapter(mContext, ShopActivityEntityList,selectedDate, object : AverageShopListClickListener {
             override fun onSyncClick(position: Int) {
 
                 val shop = AppDatabase.getDBInstance()!!.addShopEntryDao().getShopDetail(ShopActivityEntityList[position].shopid)
@@ -1281,7 +1281,12 @@ class AverageShopFragment : BaseFragment(), DatePickerListener, View.OnClickList
 
                 }
                 else{
-                    (this as DashboardActivity).showSnackMessage(getString(R.string.no_internet))
+                    try{
+                        Toaster.msgShort(mContext,getString(R.string.no_internet))
+                        //(this as DashboardActivity).showSnackMessage(getString(R.string.no_internet))
+                    }catch (ex:Exception){
+                        ex.printStackTrace()
+                    }
                 }
 
             }
@@ -1331,7 +1336,7 @@ class AverageShopFragment : BaseFragment(), DatePickerListener, View.OnClickList
             }else {
                 msgBody= "Hey there!\n" +
                         "Hope you had a successful meeting with (${Pref.user_name} - ${Pref.UserLoginContactID})\n" +
-                        "We’ll be happy to assist you further\n" +
+                        "We’ll be happy to assist you further with any inquiries or support you may require.\n" +
                         "*Team Eurobond*\n"
                 templateName = "incoming_call_response_2"
             }
@@ -1344,13 +1349,15 @@ class AverageShopFragment : BaseFragment(), DatePickerListener, View.OnClickList
                         var resp = JsonParser.parseString(response)
                         var statusCode = resp.asJsonObject.get("statusCode").toString().drop(1).dropLast(1)
                         var statusMsg = resp.asJsonObject.get("reason").toString().drop(1).dropLast(1)
+                        var transId = resp.asJsonObject.get("transactionId").toString().drop(1).dropLast(1)
+                        if(transId == null){
+                            transId = ""
+                        }
 
                         if(statusCode.equals("200",ignoreCase = true) && statusMsg.equals("success",ignoreCase = true)){
-                            AppDatabase.getDBInstance()?.visitRevisitWhatsappStatusDao()!!.
-                            updateWhatsStatus(true,"Sent Successfully",obj.sl_no)
+                            AppDatabase.getDBInstance()?.visitRevisitWhatsappStatusDao()!!.updateWhatsStatus(true,"Sent Successfully",obj.sl_no,transId)
                         }else{
-                            AppDatabase.getDBInstance()?.visitRevisitWhatsappStatusDao()!!.
-                            updateWhatsStatus(false,statusMsg.toString(),obj.sl_no)
+                            AppDatabase.getDBInstance()?.visitRevisitWhatsappStatusDao()!!.updateWhatsStatus(false,statusMsg.toString(),obj.sl_no,transId)
                         }
 
                         val simpleDialog = Dialog(mContext)
@@ -1377,7 +1384,7 @@ class AverageShopFragment : BaseFragment(), DatePickerListener, View.OnClickList
                         params.put("msg", msgBody)
                         params.put("wabaNumber", "917888488891")
                         params.put("output", "json")
-                        //params.put("mobile", "919830916971")
+                        //params.put("mobile", "918017845376")
                         params.put("mobile", "91${obj.contactNo}")
                         params.put("sendMethod", "quick")
                         params.put("msgType", "text")

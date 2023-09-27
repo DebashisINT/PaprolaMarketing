@@ -18,9 +18,9 @@ interface VisitRevisitWhatsappStatusDao {
     @Query("SELECT * FROM " + AppConstant.SHOP_VISIT_REVISIT_WHATSAPP_STATUS +" where shop_id=:shop_id and date=:date")
     fun getByShopIDDate(shop_id:String,date:String): VisitRevisitWhatsappStatus?
 
-    @Query("update " + AppConstant.SHOP_VISIT_REVISIT_WHATSAPP_STATUS+" set isWhatsappSent=:isWhatsappSent,whatsappSentMsg=:whatsappSentMsg " +
+    @Query("update " + AppConstant.SHOP_VISIT_REVISIT_WHATSAPP_STATUS+" set isWhatsappSent=:isWhatsappSent,whatsappSentMsg=:whatsappSentMsg,transactionId=:transactionId " +
             "where sl_no=:sl_no")
-    fun updateWhatsStatus(isWhatsappSent:Boolean,whatsappSentMsg:String,sl_no:Int)
+    fun updateWhatsStatus(isWhatsappSent:Boolean,whatsappSentMsg:String,sl_no:Int,transactionId:String)
 
     @Query("SELECT * FROM " + AppConstant.SHOP_VISIT_REVISIT_WHATSAPP_STATUS+" where isUploaded = 0")
     fun getUnsyncList(): List<VisitRevisitWhatsappStatus?>?

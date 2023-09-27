@@ -157,6 +157,7 @@ import java.io.*
 import java.nio.channels.FileChannel
 import java.util.*
 import java.util.concurrent.ExecutionException
+import kotlin.collections.ArrayList
 
 
 /**Permission NameDISABLE KEYGUARD Status
@@ -750,6 +751,25 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                                 if (configResponse.IsAutomatedWhatsAppSendforRevisit != null)
                                     Pref.IsAutomatedWhatsAppSendforRevisit = configResponse.IsAutomatedWhatsAppSendforRevisit!!
 
+                                if (configResponse.IsAllowBackdatedOrderEntry != null)
+                                    Pref.IsAllowBackdatedOrderEntry = configResponse.IsAllowBackdatedOrderEntry!!
+                                try{
+                                    Pref.Order_Past_Days = configResponse.Order_Past_Days!!.toString()
+                                }catch (ex:Exception){
+                                    Pref.Order_Past_Days = "0"
+                                }
+
+                                //Begin 15.0 Pref v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+                                if (configResponse.Show_distributor_scheme_with_Product != null)
+                                    Pref.Show_distributor_scheme_with_Product = configResponse.Show_distributor_scheme_with_Product!!
+                                //End 15.0 Pref v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+
+                                //Begin 16.0 Pref v 4.1.6 Tufan 07/09/2023 mantis 26785 Multi visit Interval in Minutes Against the Same Shop
+                                if (configResponse.MultiVisitIntervalInMinutes != null)
+                                    Pref.MultiVisitIntervalInMinutes = configResponse.MultiVisitIntervalInMinutes!!
+                                //End 16.0 Pref v 4.1.6 Tufan 07/09/2023 mantis 26785 Multi visit Interval in Minutes Against the Same Shop
+
+
                                 /*if (configResponse.willShowUpdateDayPlan != null)
                                     Pref.willShowUpdateDayPlan = configResponse.willShowUpdateDayPlan!!
 
@@ -1132,7 +1152,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                                 }
                             } else {
                                /* progress_wheel.stopSpinning()*/
-                                checkToCallAreaListApi()
+                                if(AppDatabase.getDBInstance()?.productListDao()?.getAll()!!.isEmpty()){
+                                    checkToCallAreaListApi()
+                                }else{
+                                    AppDatabase.getDBInstance()?.productRateDao()?.deleteAll()
+                                    val rateList: ArrayList<ProductRateEntity> = AppDatabase.getDBInstance()?.productRateDao()?.getAllBlank() as ArrayList<ProductRateEntity>
+                                    AppDatabase.getDBInstance()?.productRateDao()?.insertAll(rateList)
+                                    checkToCallAreaListApi()
+                                }
+
+                                //checkToCallAreaListApi()
                             }
 
                         }, { error ->
@@ -3458,7 +3487,19 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
     }
 
     private fun initPermissionCheck() {
+        //begin mantis id 26741 Storage permission updation Suman 22-08-2023
+        var permissionList = arrayOf<String>( Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO,)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissionList += Manifest.permission.READ_MEDIA_IMAGES
+            permissionList += Manifest.permission.READ_MEDIA_AUDIO
+            permissionList += Manifest.permission.READ_MEDIA_VIDEO
+            permissionList += Manifest.permission.POST_NOTIFICATIONS
+        }else{
+            permissionList += Manifest.permission.WRITE_EXTERNAL_STORAGE
+            permissionList += Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+//end mantis id 26741 Storage permission updation Suman 22-08-2023
         permissionUtils = PermissionUtils(this, object : PermissionUtils.OnPermissionListener {
             @TargetApi(Build.VERSION_CODES.M)
             override fun onPermissionGranted() {
@@ -3497,8 +3538,16 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                     System.exit(0)
                 },3000)*/
             }
+// mantis id 26741 Storage permission updation Suman 22-08-2023
+        },permissionList /*arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO,
 
-        }, arrayOf<String>(Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE, Manifest.permission.RECORD_AUDIO))
+            Manifest.permission.READ_MEDIA_IMAGES,
+            Manifest.permission.READ_MEDIA_AUDIO,
+            Manifest.permission.READ_MEDIA_VIDEO
+
+            )*/
+
+        )
     }
 
     fun fileManagePermii() {
@@ -4285,6 +4334,20 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
     }
 
     private fun initCameraPermissionCheck() {
+
+        //begin mantis id 26741 Storage permission updation Suman 22-08-2023
+        var permissionList = arrayOf<String>( Manifest.permission.CAMERA)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissionList += Manifest.permission.READ_MEDIA_IMAGES
+            permissionList += Manifest.permission.READ_MEDIA_AUDIO
+            permissionList += Manifest.permission.READ_MEDIA_VIDEO
+        }else{
+            permissionList += Manifest.permission.WRITE_EXTERNAL_STORAGE
+            permissionList += Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+//end mantis id 26741 Storage permission updation Suman 22-08-2023
+
         permissionUtils = PermissionUtils(this, object : PermissionUtils.OnPermissionListener {
             override fun onPermissionGranted() {
                 captureFrontImage()
@@ -4294,7 +4357,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
                 showSnackMessage(getString(R.string.accept_permission))
             }
 
-        }, arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        },permissionList) //arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
 
     private fun captureFrontImage() {
@@ -8962,9 +9025,14 @@ class LoginActivity : BaseActivity(), View.OnClickListener, LocationListener {
             .into(iv_loader_spin)
     }
     private fun loadNotProgress(){
-        enableScreen()
-        iv_background_color_set.visibility = View.GONE
-        iv_loader_spin.visibility = View.GONE
+
+        try {
+            enableScreen()
+            iv_background_color_set.visibility = View.GONE
+            iv_loader_spin.visibility = View.GONE
+        }catch (ex : Exception){
+            Timber.d("loadNotProgress error = ${ex.message}")
+        }
     }
     
 

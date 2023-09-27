@@ -63,12 +63,12 @@
             android:id="@+id/dialog_cancel_order_header_TV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Do you want to go back ?"
+            android:gravity="left"
+            android:text="Do you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go backDo you want to go back ?"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/_11sdp"
-            android:layout_marginLeft="@dimen/_6sdp"
-            android:layout_marginRight="@dimen/_6sdp"
+            android:layout_marginLeft="@dimen/_12sdp"
+            android:layout_marginRight="@dimen/_12sdp"
             android:layout_marginBottom="@dimen/_3sdp"/>
 
 

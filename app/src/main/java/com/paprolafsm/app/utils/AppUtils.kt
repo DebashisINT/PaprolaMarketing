@@ -66,7 +66,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.regex.Matcher
 import java.util.regex.Pattern
-
+import java.time.Duration
 
 /**
  * Created by Pratishruti on 08-11-2017.
@@ -1848,6 +1848,16 @@ class AppUtils {
         fun getCurrentISODateAtt(): String {
             val df = SimpleDateFormat("yyyy-MM-dd'T'00:00:00", Locale.ENGLISH)
             return df.format(Date()).toString()
+        }
+
+        fun geTimeDuration( startTime: String , endTime: String ): String { // "2023-09-07T15:29:24" "2023-09-07T15:20:24"
+            val timestamp1 = LocalDateTime.parse(startTime)
+            val timestamp2 = LocalDateTime.parse(endTime)
+
+            val duration = Duration.between(timestamp1, timestamp2).abs()
+            val minutes = duration.toMinutes().toString()
+            return  minutes
+
         }
 
         fun getCurrentDateForShopActi(): String {

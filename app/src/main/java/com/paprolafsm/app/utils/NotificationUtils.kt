@@ -15,6 +15,7 @@ import android.util.Log
 import android.widget.RemoteViews
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.paprolafsm.CustomStatic
 import com.paprolafsm.R
 import com.paprolafsm.app.AppConstant
@@ -1511,7 +1512,6 @@ class NotificationUtils(headerText: String, bodyText: String, shopId: String, lo
         val notificationmanager = applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
          CustomStatic.lead_msgBody = remoteMessage?.data?.get("body")
-        CustomStatic.lead_msgType = remoteMessage?.data?.get("type")
         CustomStatic.lead_msgLeadDate = remoteMessage?.data?.get("lead_date")
         CustomStatic.lead_msgLeadEnquiry = remoteMessage?.data?.get("enquiry_type")
 

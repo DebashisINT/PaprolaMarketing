@@ -89,15 +89,14 @@
                                     android:padding="@dimen/_5sdp"/>
                                      <ImageView
                                 android:id="@+id/iv_frag_performance_atteninfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
+                                         android:layout_width="@dimen/_22sdp"
+                                         android:layout_height="@dimen/_22sdp"
+                                         android:layout_gravity="center"
+                                         android:layout_margin="@dimen/_2sdp"
+                                         android:background="@drawable/info_icon"
+                                         android:scaleType="fitXY"
                                          android:visibility="gone"
-                                android:scaleType="fitCenter" />
+                                 />
 
                            <!-- </androidx.cardview.widget.CardView>-->
 
@@ -318,14 +317,12 @@
                                     android:padding="@dimen/_5sdp"/>
                                    <ImageView
                                 android:id="@+id/iv_frag_performance_MTDinfo"
-                                android:layout_width="@dimen/_22sdp"
-                                android:layout_height="@dimen/_22sdp"
-                                android:layout_gravity="center"
-                                android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                       android:layout_width="@dimen/_22sdp"
+                                       android:layout_height="@dimen/_22sdp"
+                                       android:layout_gravity="center"
+                                       android:layout_margin="@dimen/_2sdp"
+                                       android:background="@drawable/info_icon"
+                                       android:scaleType="fitXY" />
 
                           <!--  </androidx.cardview.widget.CardView>-->
 
@@ -540,14 +537,12 @@
                                     android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_threemonthinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                            <!-- </androidx.cardview.widget.CardView>-->
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
 
@@ -666,14 +661,12 @@
                                     android:padding="@dimen/_5sdp"/>
                             <ImageView
                                 android:id="@+id/iv_frag_performance_last10info"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                             <!--</androidx.cardview.widget.CardView>-->
 
@@ -853,14 +846,12 @@
                                     android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_activityageinginfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                             <!--</androidx.cardview.widget.CardView>-->
 
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
@@ -1283,14 +1274,12 @@
                                     android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_partywisesalesinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                             <!--androidx.cardview.widget.CardView>-->
                              <!-- start V 3.9.9  0026308 mantis new logo added  -->
 
@@ -1499,14 +1488,12 @@
                                 android:singleLine="true" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
 
                         </LinearLayout>
@@ -1645,14 +1632,12 @@
                                 android:singleLine="true" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotvisitedinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -1794,14 +1779,12 @@
 
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotproductnotsellinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -1947,14 +1930,12 @@
                                 android:singleLine="true" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotcollectioninfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -2088,20 +2069,18 @@
                                 android:text="(Total party count)"
                                 android:textSize="@dimen/_8sdp"
                                 android:textColor="@color/gray_50_dark"
-                                android:gravity="center"
+                                 android:gravity="center"
                                 android:layout_marginLeft="@dimen/_5sdp"
                                 android:layout_gravity="center"
                                 android:singleLine="true" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCount_zeroOrderinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -2240,14 +2219,12 @@
                                 android:singleLine="true" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCount_noVisitinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 

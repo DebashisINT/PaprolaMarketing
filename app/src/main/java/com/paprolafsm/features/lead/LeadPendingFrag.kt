@@ -163,7 +163,7 @@ class LeadPendingFrag : BaseFragment(), DatePickerDialog.OnDateSetListener, View
 
         if(!CustomStatic.lead_msgBody.equals("")){
             fromDate = CustomStatic.lead_msgLeadDate
-            toDate = CustomStatic.lead_msgLeadDate
+            toDate = AppUtils.getCurrentDateForShopActi()// CustomStatic.lead_msgLeadDate
             enquiryTypeSelectSpinner.text = CustomStatic.lead_msgLeadEnquiry
             CustomStatic.lead_msgBody=""
             getLeadFetch()

@@ -73,6 +73,7 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.YearMonth
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -452,59 +453,59 @@ class TeamPerformanceFragment: BaseFragment(), View.OnClickListener {
             }
             R.id.iv_frag_performance_MTDinfo -> {
                 iButtonText(
-                    "1. Total Order Value : Total sum of order value for current month first date to present date \n" +
-                            "2. Average Order Value : Average order value for current month first date to present date \n "+
-                            "3. Total Order Count : Total sum of order count for current month first date to present date \n "+
-                            "4. Average Order Count : Average order count for current month first date to present date \n")
+                    "1. Total Order Value : Total order value of current month \n" +
+                            "2. Total Order Count : Total order count of current month \n "+
+                            "3. Average Order Value : (Total order value of current month / Total order count of current month) \n"+
+                            "4. Average Order Count : (Total order count of current month / Present date of current month) \n")
             }R.id.iv_frag_performance_atteninfo -> {
             iButtonText(
-                "1. Present : Total count of present based on the last month data \n" +
-                        "2. Not Logged In : Total count of absent based on the last month data \n")
+                "1. Present : Total count of attendance of last month\n" +
+                        "2. Not Logged In : Total count of not logged in of last month \n")
         }R.id.iv_frag_performance_threemonthinfo  -> {
             iButtonText(
-                "1. Present : Average order value based on the last 3 month data \n"
+                "Last 3 months Comparative Average Order Value : (Total order value of the month / Total no of days of the month) \n"
             )
         }R.id.iv_frag_performance_last10info -> {
             iButtonText(
-                "1. Total Order Value : Total sum of last 10 order value based on the selected shop \n" +
-                        "2. Average Order Value : Average order value of last 10 order based on the selected shop \n "+
-                        "3. Total Order Count : Total sum of last 10 order count based on the selected shop\n "
+                "1. Total Order Value : Total value of last 10 orders  \n" +
+                        "2. Total Order Count : Total order count of last 10 order  \n"+
+                        "3. Average Order Value : (Total value of last 10 orders / Total no of orders) \n"
             )
         }R.id.iv_frag_performance_activityageinginfo -> {
             iButtonText(
-                "1.Last Visit : How long ago visit the shop  \n" +
-                        "2. Most Recent Visit : Date of most recently visit \n "+
-                        "3. Last Order : How long ago was the order taken \n "+
-                        "4. Last Collection : How long ago was the collection taken\n ")
+                "1. Last Visit : No of days since last visit \n" +
+                        "2. Most Recent Visit : Last date of visit \n"+
+                        "3. Last Order : No of days since last order \n"+
+                        "4. Last Collection : No of days since last collection \n")
         }R.id.iv_frag_performance_partywisesalesinfo -> {
             iButtonText(
-                "1. Total Sales Value : Total sum of Sales Value based on the selected party\n " )
+                "Total Sales Value : Total sum of Sales Value \n" )
         }R.id.iv_frag_performance_headerCountinfo -> {
             iButtonText(
-                "1. Total Party Count : Non activity detected based on the ORDER from last 3 months \n"
+                "Total Party Count : No of parties not placed order in last 3 months \n"
             )
         }R.id.iv_frag_performance_headerCountNotvisitedinfo -> {
             iButtonText(
-                "1. Total Party Count : Non activity detected based on the VISIT from last 30 days \n"
+                "Total Party Count : No of parties not visited in last 3 months \n"
 
             )
         }R.id.iv_frag_performance_headerCountNotproductnotsellinfo -> {
             iButtonText(
-                "1. Total Product Count : The count of non selling product from last 3 months \n"
+                "Total Product Count : No of non selling product in last 3 months \n"
 
             )
         }R.id.iv_frag_performance_headerCountNotcollectioninfo -> {
             iButtonText(
-                "1. Total Party Count : No collection received from last 3 months \n"
+                "Total Party Count : No of parties where collection not received from last 3 months \n"
 
             )
         }R.id.iv_frag_performance_headerCount_zeroOrderinfo -> {
             iButtonText(
-                "1. Total Party Count : No order received from the after shop creation \n"
+                "Total Party Count : No of parties not placed order \n"
             )
         }R.id.iv_frag_performance_headerCount_noVisitinfo -> {
             iButtonText(
-                "1. Total Party Count : Non activity detected based on the VISIT from the after shop creation \n"
+                "1. Total Party Count : No of parties not visited \n"
             )            }
 
 
@@ -1937,12 +1938,22 @@ class TeamPerformanceFragment: BaseFragment(), View.OnClickListener {
                     var shopActityResponse = result as ShopActivityResponse
                     if (shopActityResponse.status == "200") {
                         doAsync {
+                            var arrShopIdFromApi : ArrayList<String> = ArrayList()
                             for(i in 0..shopActityResponse.date_list!!.size-1){
                                  shopVistedList = shopActityResponse.date_list!!.get(i).shop_list as ArrayList<ShopActivityResponseShopList>
+                                for(j in 0..shopVistedList.size-1){
+                                    if(shopVistedList.get(j).Is_Newshopadd == false){
+                                        arrShopIdFromApi.add(shopVistedList.get(j).shopid.toString())
+                                    }
+                                }
                             }
                             var filterVisitedIDList = shopVistedList.map { shopVistedList -> shopVistedList.visited_date!!.split("T").get(0) }
                             var userShopL = shopList.data!!.shop_list!!.map { it.shop_id } as ArrayList<String>
                             var finalShopL: List<String> = userShopL.minus(filterVisitedIDList) as ArrayList<String>
+
+                            var arrShopIdFromApiDistinct = arrShopIdFromApi.distinct()
+                            var filterFL = userShopL.filterNot { it in arrShopIdFromApiDistinct }as ArrayList<String>
+                            finalShopL = filterFL
 
                             finalLl = ArrayList()
                             for(i in 0..finalShopL.size-1) {

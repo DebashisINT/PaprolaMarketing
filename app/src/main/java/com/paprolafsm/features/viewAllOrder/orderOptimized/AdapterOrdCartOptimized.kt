@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.appcompat.view.menu.MenuView.ItemView
 import androidx.recyclerview.widget.RecyclerView
 import com.paprolafsm.R
+import com.paprolafsm.app.AppDatabase
 import com.paprolafsm.app.Pref
 import com.paprolafsm.app.utils.AppUtils
 import com.paprolafsm.app.utils.CustomSpecialTextWatcher1
@@ -26,12 +27,17 @@ import kotlinx.android.synthetic.main.row_ord_opti_product_list.view.*
 
 //Rev 1.0  AdapterOrdCartOptimized Suman 20-06-2023 mantis 0026389
 //Rev 2.0 v 4.1.6  0026439: Order Edit in cart optimization saheli 26-06-2023
-class AdapterOrdCartOptimized(val mContext:Context,val cartL:ArrayList<FinalOrderData>,val listner:OnRateQtyOptiOnClick):
+//Rev 3.0 v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+class AdapterOrdCartOptimized(val mContext:Context,val cartL:ArrayList<FinalOrderData>,shop_id:String,val listner:OnRateQtyOptiOnClick):
     RecyclerView.Adapter<AdapterOrdCartOptimized.OrdCartOptimizedViewHolder>(){
 
     var isRateChanging = false
     var isDiscChanging = false
     var isQtyChanging = false
+    var shopID = ""
+    init {
+        shopID = shop_id
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrdCartOptimizedViewHolder {
         val view = LayoutInflater.from(mContext).inflate(R.layout.row_ord_opti_cart_list,parent,false)
@@ -288,6 +294,19 @@ class AdapterOrdCartOptimized(val mContext:Context,val cartL:ArrayList<FinalOrde
                 }
                 simpleDialogg.show()
             }
+
+           // Begin Rev 3.0  v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+            val shopType = AppDatabase.getDBInstance()!!.addShopEntryDao().getShopByIdN(shopID).type.toString()
+            if(Pref.Show_distributor_scheme_with_Product && shopType =="4"){
+                itemView.ll_row_ord_opti_cart_Show_distributor_scheme_with_Product.visibility = View.VISIBLE
+                itemView.et_row_ord_opti_cart_qty_per_unit.setText("Qty per Unit\n"+cartL.get(adapterPosition).Qty_per_Unit.toString())
+                itemView.et_row_ord_opti_cart_scheme_qty.setText("Scheme Qty\n"+cartL.get(adapterPosition).Scheme_Qty.toString())
+                itemView.et_row_ord_opti_cart_effective_rate.setText("Effective Rate\n"+cartL.get(adapterPosition).Effective_Rate.toString())
+            }else{
+                itemView.ll_row_ord_opti_cart_Show_distributor_scheme_with_Product.visibility = View.GONE
+            }
+            // End Rev 3.0  v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+
         }
     }
 

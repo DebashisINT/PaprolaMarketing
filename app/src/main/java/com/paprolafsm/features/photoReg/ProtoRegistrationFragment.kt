@@ -3,8 +3,6 @@ package com.paprolafsm.features.photoReg
 import android.Manifest
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
-import android.R.attr.password
-import android.accounts.AccountManager.KEY_PASSWORD
 import android.app.Activity
 import android.app.ActivityManager
 import android.app.Dialog
@@ -19,8 +17,12 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
-import android.os.*
+import android.os.Build
 import android.os.Build.VERSION.SDK_INT
+import android.os.Bundle
+import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.speech.tts.TextToSpeech
@@ -41,16 +43,18 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.AuthFailureError
-import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.paprolafsm.MySingleton
 import com.paprolafsm.R
-import com.paprolafsm.app.*
+import com.paprolafsm.app.AppDatabase
+import com.paprolafsm.app.MaterialSearchView
+import com.paprolafsm.app.NetworkConstant
+import com.paprolafsm.app.NewFileUtils
+import com.paprolafsm.app.Pref
+import com.paprolafsm.app.SearchListener
+import com.paprolafsm.app.domain.VisitRevisitWhatsappStatus
 import com.paprolafsm.app.types.FragType
 import com.paprolafsm.app.uiaction.IntentActionable
 import com.paprolafsm.app.utils.AppUtils
@@ -65,7 +69,13 @@ import com.paprolafsm.features.myjobs.model.WIPImageSubmit
 import com.paprolafsm.features.photoReg.adapter.AdapterUserList
 import com.paprolafsm.features.photoReg.adapter.PhotoRegUserListner
 import com.paprolafsm.features.photoReg.api.GetUserListPhotoRegProvider
-import com.paprolafsm.features.photoReg.model.*
+import com.paprolafsm.features.photoReg.model.AadhaarSubmitData
+import com.paprolafsm.features.photoReg.model.DeleteUserPicResponse
+import com.paprolafsm.features.photoReg.model.GetAllAadhaarResponse
+import com.paprolafsm.features.photoReg.model.GetUserListResponse
+import com.paprolafsm.features.photoReg.model.UpdateUserNameModel
+import com.paprolafsm.features.photoReg.model.UpdateUserNameResponse
+import com.paprolafsm.features.photoReg.model.UserListResponseModel
 import com.paprolafsm.features.photoReg.present.UpdateDSTypeStatusDialog
 import com.paprolafsm.features.reimbursement.presentation.FullImageDialog
 import com.paprolafsm.widgets.AppCustomEditText
@@ -73,18 +83,30 @@ import com.paprolafsm.widgets.AppCustomTextView
 import com.downloader.Error
 import com.downloader.OnDownloadListener
 import com.downloader.PRDownloader
-import com.squareup.picasso.*
+import com.google.gson.JsonParser
+import com.itextpdf.text.pdf.PdfName.XML
+import com.squareup.picasso.Cache
+import com.squareup.picasso.LruCache
+import com.squareup.picasso.MemoryPolicy
+import com.squareup.picasso.NetworkPolicy
+import com.squareup.picasso.Picasso
 import com.squareup.picasso.Picasso.RequestTransformer
 import com.themechangeapp.pickimage.PermissionHelper
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
-import java.util.*
+import java.util.Locale
 
 
 class ProtoRegistrationFragment : BaseFragment(), View.OnClickListener {
@@ -190,13 +212,14 @@ class ProtoRegistrationFragment : BaseFragment(), View.OnClickListener {
         progress_wheel.spin()
         Handler(Looper.getMainLooper()).postDelayed({
             callUSerListApi()
-            //whatsappApi()
         }, 3000)
 
         //startVoiceInput()
 
     }
     // 1.0 MemberListFragment AppV 4.0.7 mantis 0025683 start
+
+
 
 
     private fun startVoiceInput() {
@@ -224,8 +247,21 @@ class ProtoRegistrationFragment : BaseFragment(), View.OnClickListener {
 
     private var permissionUtils: PermissionUtils? = null
     private fun initPermissionCheck() {
+        //begin mantis id 26741 Storage permission updation Suman 22-08-2023
+        var permissionList = arrayOf<String>( Manifest.permission.CAMERA)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+            permissionList += Manifest.permission.READ_MEDIA_IMAGES
+            permissionList += Manifest.permission.READ_MEDIA_AUDIO
+            permissionList += Manifest.permission.READ_MEDIA_VIDEO
+        }else{
+            permissionList += Manifest.permission.WRITE_EXTERNAL_STORAGE
+            permissionList += Manifest.permission.READ_EXTERNAL_STORAGE
+        }
+        //end mantis id 26741 Storage permission updation Suman 22-08-2023
         permissionUtils = PermissionUtils(mContext as Activity, object : PermissionUtils.OnPermissionListener {
             override fun onPermissionGranted() {
+                var grant = true
                 /*if(SDK_INT >= 30){
                     if (!Environment.isExternalStorageManager()){
                         requestPermission()
@@ -242,8 +278,8 @@ class ProtoRegistrationFragment : BaseFragment(), View.OnClickListener {
             override fun onPermissionNotGranted() {
                 (mContext as DashboardActivity).showSnackMessage(getString(R.string.accept_permission))
             }
-
-        }, arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
+            // mantis id 26741 Storage permission updation Suman 22-08-2023
+        },permissionList)// arrayOf<String>(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE))
     }
 
     fun onRequestPermission(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

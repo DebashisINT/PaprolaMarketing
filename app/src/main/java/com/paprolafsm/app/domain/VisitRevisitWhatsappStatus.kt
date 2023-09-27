@@ -16,5 +16,6 @@ data class VisitRevisitWhatsappStatus (
     @ColumnInfo var time:String = "",
     @ColumnInfo var isWhatsappSent:Boolean = false,
     @ColumnInfo var whatsappSentMsg:String = "",
+    @ColumnInfo var transactionId:String = "",
     @ColumnInfo var isUploaded:Boolean = false,
 )

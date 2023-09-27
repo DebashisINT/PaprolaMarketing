@@ -91,14 +91,14 @@
 
                             <ImageView
                                 android:id="@+id/iv_frag_performance_atteninfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY"
+
+                                />
 
                             <!-- </androidx.cardview.widget.CardView>-->
 
@@ -296,10 +296,8 @@
                                 android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                             <!--  </androidx.cardview.widget.CardView>-->
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
 
@@ -492,16 +490,15 @@
                                 android:background="@drawable/ic_round_share"
                                 android:padding="@dimen/_5sdp"
                                 android:scaleType="fitCenter" />
+
                             <ImageView
                                 android:id="@+id/iv_frag_performance_threemonthinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                             <!-- </androidx.cardview.widget.CardView>-->
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
                         </LinearLayout>
@@ -618,14 +615,12 @@
                                 android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_last10info"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY"/>
                             <!-- </androidx.cardview.widget.CardView>-->
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
 
@@ -802,14 +797,12 @@
                                 android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_activityageinginfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                             <!-- </androidx.cardview.widget.CardView>-->
 
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
@@ -1235,14 +1228,12 @@
                                 android:scaleType="fitCenter" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_partywisesalesinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY"/>
                             <!-- </androidx.cardview.widget.CardView>-->
 
                             <!-- end V 3.9.9  0026308 mantis new logo added  -->
@@ -1449,14 +1440,12 @@
                                 android:textSize="@dimen/_8sdp" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -1595,14 +1584,12 @@
                                 android:textSize="@dimen/_8sdp" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotvisitedinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
 
                         </LinearLayout>
 
@@ -1741,14 +1728,12 @@
                                 android:textSize="@dimen/_8sdp" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotproductnotsellinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                         </LinearLayout>
 
 
@@ -1885,14 +1870,12 @@
 
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCountNotcollectioninfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                         </LinearLayout>
 
 
@@ -2033,14 +2016,12 @@
                                 android:textSize="@dimen/_8sdp" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCount_zeroOrderinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY" />
                         </LinearLayout>
 
 
@@ -2178,14 +2159,12 @@
                                 android:textSize="@dimen/_8sdp" />
                             <ImageView
                                 android:id="@+id/iv_frag_performance_headerCount_noVisitinfo"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="@dimen/_22sdp"
+                                android:layout_height="@dimen/_22sdp"
                                 android:layout_gravity="center"
                                 android:layout_margin="@dimen/_2sdp"
-                                android:background="@drawable/info_24"
-                                android:backgroundTint="@color/bill_blue"
-                                android:padding="@dimen/_5sdp"
-                                android:scaleType="fitCenter" />
+                                android:background="@drawable/info_icon"
+                                android:scaleType="fitXY"/>
                         </LinearLayout>
 
 

@@ -344,4 +344,7 @@ public interface AddShopDao {
     @Query("select lastVisitedDate from shop_detail where shop_id=:shop_id")
     String getShopListLastVisit(String shop_id);
 
+    @Query("Select * from shop_detail where type=:type and assigned_to_dd_id=:assigned_to_dd_id and lower(shop_name)=:shop_name")
+    List<AddShopDBModelEntity> getShopsAccordingToTypeDD(String type,String assigned_to_dd_id,String shop_name);
+
 }

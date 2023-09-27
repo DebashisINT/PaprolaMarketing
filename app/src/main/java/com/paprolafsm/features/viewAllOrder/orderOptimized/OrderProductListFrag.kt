@@ -51,6 +51,7 @@ import kotlin.system.measureTimeMillis
 // 4.0 OrderProductListFrag AppV 4.0.8 Suman    12/04/2023 Adapter list generation update 0025876
 // 2.0 OrderProductListFrag  v 4.1.6 stock optmization mantis 0026391 20-06-2023 saheli
 // 3.0 OrderProductListFrag  v 4.1.6 Saheli mantis 0026430 Play console report fixing 23-06-2023
+//3.0  v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
 class OrderProductListFrag : BaseFragment(), View.OnClickListener {
 
     private lateinit var mContext: Context
@@ -393,6 +394,12 @@ class OrderProductListFrag : BaseFragment(), View.OnClickListener {
                 submitedQty = "-1"
                 submitedRate = productL.get(i).rate
 
+       // Begin 3.0  v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+                Qty_per_Unit = productL.get(i).Qty_per_Unit
+                Scheme_Qty= productL.get(i).Scheme_Qty
+                Effective_Rate = productL.get(i).Effective_Rate
+                // end 3.0  v 4.1.6 Tufan 22/08/2023 mantis 26649 Show distributor scheme with Product
+
 
                 // 2.0 start OrderProductListFrag  v 4.1.6 stock optmization mantis 0026391 20-06-2023 saheli
                 stock_amount =  productL.get(i).stock_amount
@@ -416,7 +423,7 @@ class OrderProductListFrag : BaseFragment(), View.OnClickListener {
             productQtyRateSubmit.add(obj)
         }
 
-        productAdapter = AdapterOrdProductOptimized(mContext, productQtyRateSubmit, finalOrderDataList, object :
+        productAdapter = AdapterOrdProductOptimized(mContext, productQtyRateSubmit, shop_id,finalOrderDataList, object :
                 AdapterOrdProductOptimized.OnProductOptiOnClick {
                 override fun onProductAddClick(productCount: Int,sumAmt:Double) {
                     AppUtils.hideSoftKeyboard(mContext as DashboardActivity)
